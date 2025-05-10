@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #000; 
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+#mainBox{
+  position: relative;
+  text-align: center;
+  width: 50vw;
+  height: auto;
+  max-height: 80vh;
+  background-color: #121212;
+  padding: 3%;
+  border: 0 solid;
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.322)
+}
+#gameNameH1{
+  font-family: "Orbitron";
+  font-size: 6vh;
+  color: hsla(237, 100%, 51%, 0.908);
+  margin-bottom: 5%;
+}
+#mainText{
+  margin-top: 10%;
+  font-weight: bold;
+  font-size: 3vh;
+  color: #fff;
+}
+#mainText span{
+  display: inline-block;
+  margin-top: 10%;
+  color: #adadad;
+  text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.3);
+  animation: fadeIn 3s ease-in forwards;
+}
+#expressionsPanel{
+  background-color: hsla(0, 0%, 31%, 0.137);
+  width: 80%;
+  padding: 5%;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 5%;
+  display: none;
+}
+#motivationalText{
+  padding: 5%;
+  font-weight: bold;
+  font-size: 4vh;
+  color: #fff;
+}
+#expressions{
+  font-size: 4vh;
+  font-family: "Orbitron";
+  color: #fff;
+}
+#startButton{
+  font-family: "Orbitron";
+  margin-top: 10%;
+  padding: 3%;
+  font-size: 5vh;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  border-style: none;
+  background-color: #000;
+  color: #fff;
+}
+#startButton:hover{
+  background-color: #fff;
+  border-radius: 10%;
+  color: #000;
+}
+#trueButton{
+  background-color: hsla(120, 100%, 51%, 0.7);
+  padding: 5%;
+  font-size: 5vh;
+  border-radius: 5%;
+  border-style: none;
+  border: 2px solid hsla(120, 98%, 25%, 0.5);
+  cursor: pointer;
+  display: none;
+}
+#trueButton:hover{
+  background-color: hsla(120, 100%, 51%, 0.9);
+}
+#trueButton:active{
+  transform: scale(0.95);
+}
+#falseButton{
+  background-color: hsla(0, 100%, 51%, 0.7);
+  padding: 5%;
+  font-size: 5vh;
+  border-radius: 5%;
+  border-style: none;
+  border: 2px solid hsla(0, 98%, 25%, 0.5);
+  cursor: pointer;
+  display: none;
+}
+#falseButton:hover{
+background-color: hsla(0, 100%, 51%, 0.9)
+}
+#falseButton:active{
+  transform: scale(0.95);
+}
+#resetButton{
+  font-family: "Orbitron";
+  margin-top: 3%;
+  padding: 3%;
+  border-style: none;
+  font-size: 3vh;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  display: none;
+  background-color: #000;
+  color: #fff;
+}
+#resetButton:hover{
+  background-color: #fff;
+  color: #000;
+}
+#resetButton:active{
+  transform: scale(0.95);
+}
+#questionCounter{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0 5% 3% 0;
+  color: #fff;
+  font-size: 1.5em;
+  font-family: "Orbitron";
+  display: none;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
