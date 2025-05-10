@@ -88,7 +88,7 @@ function verifyAnswer(event){
         motivationalText.textContent = "É, já está acima da média pelo menos..."
         break
       case 4:
-        motivationalText.textContent = "Aeeeee agora já dá para contar nos dedos, sem vergonha! (Não sei se essa vírgula está no lugar certo...)"
+        motivationalText.textContent = "Aeeeee agora já dá para começar a se gabar, sem vergonha! (Não sei se essa vírgula está no lugar certo...)"
         break
       case 5:
         motivationalText.textContent = "Parabéns, deve ter prestado atenção nas aulas ou foi pura cagada mesmo... joga aí de novo pra confirmar :)"
