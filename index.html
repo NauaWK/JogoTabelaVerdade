@@ -12,13 +12,19 @@
     <div id="mainBox">
       <h1 id="gameNameH1"> Jogo da Tabela Verdade</h1>
       <p id="mainText"> Serão geradas 5 expressões lógicas aleatórias e você precisará responder com V (verdadeiro) ou F (falso).<br><i><span>Será que você está pronto para aplicar tudo o que aprendeu?</span></i></p>
+      <h2 id="chooseDifficultyText">Escolha a dificuldade: </h2>
+      <div id="difficultyPanel">
+        <button id="easy" data-value = "1"> Fácil </button>
+        <button id="medium" data-value = "2"> Médio</button>
+        <button id="hard" data-value = "3"> Difícil </button>
+      </div>
       <div id="expressionsPanel">
         <h1 id="expressions"> </h1>
       </div>
       <p id="motivationalText"></p>
       <button id="startButton"> Iniciar! </button>
-      <button id="trueButton"> V </button>
-      <button id="falseButton"> F </button><br>
+      <button id="trueButton" data-value ="true"> V </button>
+      <button id="falseButton" data-value ="false"> F </button><br>
       <button id="resetButton"> Reiniciar </button>
       <p id="questionCounter"> </p>
     </div>
