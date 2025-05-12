@@ -36,10 +36,10 @@ Object.values(difficultyButtons).forEach(button => {
 let variable1, variable2, randomConective, notText1, notText2, hasNotConective, hasNotConective1, hasNotConective2
 const originalConectives = ["AND", "OR", "→", "XOR"]
 let conectives = [...originalConectives]
-
-function setDifficulty(gameState.difficultyLevel){
+function setDifficulty(level){
   conectives = [...originalConectives]
-  switch(gameState.difficultyLevel){
+  gameState.difficultyLevel = level
+  switch(level){
     case "1": 
       conectives = conectives.filter(conective => !["→", "XOR"].includes(conective))
       break
