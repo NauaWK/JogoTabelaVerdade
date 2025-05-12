@@ -48,7 +48,7 @@ function setDifficulty(level){
       startGame()
       break
     case "3":
-      conectives = conectives.splice(0,2)
+      conectives = conectives.filter(conective => !["AND", "OR"].includes(conective))
       startGame()
       break
   }
