@@ -89,8 +89,8 @@ function generateExpression(){
       break
     case "2":
       hasNotConective = Math.random() < 0.5
-      hasNotConective1 = Math.random() < 0.8
-      hasNotConective2 = Math.random() < 0.8
+      hasNotConective1 = Math.random() < 0.5
+      hasNotConective2 = Math.random() < 0.5
       break
     case "3":
       hasNotConective = Math.random() < 0.7
