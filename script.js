@@ -6,61 +6,122 @@ const mainText = document.getElementById("mainText")
 const resetButton = document.getElementById("resetButton")
 const expressions = document.getElementById("expressions")
 const motivationalText = document.getElementById("motivationalText")
-const possibleValues = {true: "V", false: "F"}
 const spanPlacar = document.createElement("span");
 const questionCounter = document.getElementById("questionCounter")
-
-trueButton.setAttribute("data-value", "true")
-falseButton.setAttribute("data-value", "false")
+const difficultyPanel = document.getElementById("difficultyPanel")
+const chooseDifficultyText = document.getElementById("chooseDifficultyText")
+const possibleValues = {true: "V", false: "F"}
 
 let gameState = {
   questionNumber: 0,
   placar: 0,
   contador: 0,
-  result: null
+  result: null,
+  difficultyLevel: null
 }
 
-let variable1, variable2, randomConective, notText1, notText2
+const difficultyButtons = {
+  easyButton: document.getElementById("easy"), 
+  mediumButton: document.getElementById("medium"),
+  hardButton: document.getElementById("hard")
+}
+
+Object.values(difficultyButtons).forEach(button => {
+  button.addEventListener("click", event => {
+    gameState.difficultyLevel = event.target.getAttribute("data-value");
+    setDifficulty(gameState.difficultyLevel);
+  });
+});
+
+let variable1, variable2, randomConective, notText1, notText2, hasNotConective, hasNotConective1, hasNotConective2
+let conectives = ["AND", "OR", "→", "XOR"]
+
+function setDifficulty(level){
+  gameState.difficultyLevel = level
+  switch(level){
+    case "1": 
+      conectives = conectives.filter(conective => !["→", "XOR"].includes(conective))
+      startGame()
+      break
+    case "2":
+      conectives = conectives.filter(conective => conective !== "XOR")
+      startGame()
+      break
+    case "3":
+      startGame()
+      break
+  }
+}
+
+function toggleVisibility(elements, displayType) {
+  elements.forEach(el => el.style.display = displayType);
+}
+
+function showDifficultyPanel(){
+  toggleVisibility([difficultyPanel], "flex")
+  toggleVisibility([chooseDifficultyText], "block")
+  toggleVisibility([startButton, mainText], "none")
+}
 
 function updateQuestionCounter() {
   questionCounter.innerHTML = `<span style="color:red; font-weight:bold;">${gameState.questionNumber}</span> /5`;
 }
-function toggleVisibility(elements, displayType) {
-  elements.forEach(el => el.style.display = displayType);
-}
 function startGame(){
   expressionsPanel.style.display = "block"
   toggleVisibility([trueButton, falseButton, resetButton, questionCounter], "inline-block");
-  toggleVisibility([startButton, mainText], "none");
+  toggleVisibility([startButton, mainText, difficultyPanel, chooseDifficultyText], "none");
   updateQuestionCounter()
   generateExpression() 
 }
 function generateExpression(){
-  const conectives = ["AND", "OR", "NOT"]
   randomConective = conectives[Math.floor(Math.random() * conectives.length)]
   variable1 = Math.random() < 0.5
-  variable2 = Math.random() < 0.5
-  let hasNotConective1 = Math.random() < 0.5
-  let hasNotConective2 = Math.random() < 0.5
-  let replacedConective = Math.random() < 0.5 ? "AND" : "OR"
+  variable2 = Math.random() < 0.5 
+  let parenthesis1 = ""
+  let parenthesis2 = ""
 
-  if(randomConective === "NOT"){
-    randomConective = replacedConective
+  // gerar NOT dinamicamente a cada rodada com base na dificuldade
+  switch(gameState.difficultyLevel){
+    case "1":
+      hasNotConective = false;
+      hasNotConective1 = Math.random() < 0.2
+      hasNotConective2 = Math.random() < 0.2
+      break
+    case "2":
+      hasNotConective = Math.random() < 0.2
+      hasNotConective1 = Math.random() < 0.8
+      hasNotConective2 = Math.random() < 0.8
+      break
+    case "3":
+      hasNotConective = Math.random() < 0.7
+      hasNotConective1 = hasNotConective2 = true
+      break
   }
-  const operators = {
+
+  const operatorsList = {
     "AND": (a, b) => a && b,
-    "OR": (a, b) => a || b
-}
-  if (operators[randomConective]) {
-    const op = operators[randomConective]; 
-    gameState.result = op(
+    "OR": (a, b) => a || b,
+    "→": (a, b) => !a || b,
+    "XOR": (a, b) => a !== b
+  }
+  if (operatorsList[randomConective]) {
+    const operator = operatorsList[randomConective]; 
+    gameState.result = operator(
         hasNotConective1 ? !variable1 : variable1,
-        hasNotConective2 ? !variable2 : variable2
+        hasNotConective2 ? !variable2 : variable2,
     );
-}
-  notText1 = hasNotConective1 ? "NOT" : ""
-  notText2 = hasNotConective2 ? "NOT" : ""
-  expressions.textContent = `Q = ${possibleValues[variable1]}, P = ${possibleValues[variable2]}, qual o resultado de ${notText1} Q ${randomConective} ${notText2} P?`
+  }
+  notOperator = hasNotConective ? "NOT" : ""
+  if(hasNotConective){
+    parenthesis1 = "("
+    parenthesis2 = ")"
+    gameState.result = !gameState.result
+  } 
+  notOperator1 = hasNotConective1 ? "NOT" : ""
+  notOperator2 = hasNotConective2 ? "NOT" : ""
+  
+  // expressão gerada aleatóriamente
+  expressions.textContent = `Q = ${possibleValues[variable1]}, P = ${possibleValues[variable2]}, qual o resultado de ${notOperator} ${parenthesis1} ${notOperator1} Q ${randomConective} ${notOperator2} P ${parenthesis2} ?`
 }
 function resetGame(){
   mainText.style.display = "block"
@@ -118,7 +179,7 @@ function verifyAnswer(event){
     }
   }
 }
+startButton.addEventListener("click", showDifficultyPanel)
 trueButton.addEventListener("click", verifyAnswer)
 falseButton.addEventListener("click", verifyAnswer)
-startButton.addEventListener("click", startGame)
 resetButton.addEventListener("click", resetGame)
