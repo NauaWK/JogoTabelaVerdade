@@ -34,24 +34,24 @@ Object.values(difficultyButtons).forEach(button => {
 });
 
 let variable1, variable2, randomConective, notText1, notText2, hasNotConective, hasNotConective1, hasNotConective2
-let conectives = ["AND", "OR", "→", "XOR"]
+const originalConectives = ["AND", "OR", "→", "XOR"]
+let conectives = [...originalConectives]
 
 function setDifficulty(level){
   gameState.difficultyLevel = level
+  conectives = [...originalConectives]
   switch(level){
     case "1": 
       conectives = conectives.filter(conective => !["→", "XOR"].includes(conective))
-      startGame()
       break
     case "2":
       conectives = conectives.filter(conective => conective !== "XOR")
-      startGame()
       break
     case "3":
       conectives = conectives.filter(conective => !["AND", "OR"].includes(conective))
-      startGame()
       break
   }
+  startGame()
 }
 
 function toggleVisibility(elements, displayType) {
