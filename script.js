@@ -37,10 +37,9 @@ let variable1, variable2, randomConective, notText1, notText2, hasNotConective, 
 const originalConectives = ["AND", "OR", "→", "XOR"]
 let conectives = [...originalConectives]
 
-function setDifficulty(level){
-  gameState.difficultyLevel = level
+function setDifficulty(gameState.difficultyLevel){
   conectives = [...originalConectives]
-  switch(level){
+  switch(gameState.difficultyLevel){
     case "1": 
       conectives = conectives.filter(conective => !["→", "XOR"].includes(conective))
       break
