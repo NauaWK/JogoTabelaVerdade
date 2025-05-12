@@ -64,7 +64,7 @@ function showDifficultyPanel(){
 }
 
 function updateQuestionCounter() {
-  questionCounter.innerHTML = `<span style="color:red; font-weight:bold;">${gameState.questionNumber}</span> /5`;
+  questionCounter.innerHTML = `<span style="color:red; font-weight:bold;">${gameState.questionNumber}</span>/5`;
 }
 function startGame(){
   expressionsPanel.style.display = "block"
