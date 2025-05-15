@@ -17,12 +17,11 @@ body{
   position: relative;
   text-align: center;
   width: 50vw;
-  height: auto;
   max-height: 80vh;
   background-color: #121212;
   padding: 3%;
   border-radius: 2%;
-  box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.322);
+  box-shadow: 1vh 1vh 2vh rgba(255, 255, 255, 0.322);
 }
 #gameNameH1{
   font-family: "Orbitron";
@@ -93,13 +92,13 @@ body{
 #mainText span{
   display: inline-block;
   margin-top: 10%;
-  color: #adadad;
-  text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.3);
-  animation: fadeIn 3s ease-in forwards;
+  color: #7a7a7a;
+  text-shadow: 0px 0px 2px #7a7a7a;
+  animation: fadeIn 2s ease-in forwards;
 }
 #expressionsPanel{
   background-color: hsla(0, 0%, 31%, 0.137);
-  width: 80%;
+  width: 90%;
   padding: 5%;
   text-align: center;
   margin: auto;
@@ -107,7 +106,7 @@ body{
   display: none;
 }
 #motivationalText{
-  padding: 5%;
+  padding: 3%;
   font-weight: bold;
   font-size: 4vh;
   color: #fff;
@@ -135,10 +134,11 @@ body{
 #trueButton{
   background-color: hsla(120, 100%, 51%, 0.7);
   padding: 5%;
+  margin-right: 0.2%;
   font-size: 5vh;
   border-radius: 5%;
   border-style: none;
-  border: 2px solid hsla(120, 98%, 25%, 0.5);
+  border: 0.3vw solid hsla(120, 98%, 25%, 0.5);
   cursor: pointer;
   display: none;
 }
@@ -151,10 +151,11 @@ body{
 #falseButton{
   background-color: hsla(0, 100%, 51%, 0.7);
   padding: 5%;
+  margin-left: 0.2%;
   font-size: 5vh;
   border-radius: 5%;
   border-style: none;
-  border: 2px solid hsla(0, 98%, 25%, 0.5);
+  border: 0.3vw solid hsla(0, 98%, 25%, 0.5);
   cursor: pointer;
   display: none;
 }
@@ -165,14 +166,14 @@ background-color: hsla(0, 100%, 51%, 0.9)
   transform: scale(0.95);
 }
 #resetButton{
+  display: none;
   font-family: "Orbitron";
+  font-size: 3vh;
   margin-top: 3%;
   padding: 3%;
   border-style: none;
-  font-size: 3vh;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-  display: none;
   background-color: #000;
   color: #fff;
 }
@@ -189,7 +190,7 @@ background-color: hsla(0, 100%, 51%, 0.9)
   bottom: 0;
   margin: 0 5% 3% 0;
   color: #fff;
-  font-size: 1.5em;
+  font-size: 5vh;
   font-family: "Orbitron";
   display: none;
 }
