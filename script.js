@@ -32,26 +32,37 @@ let gameState = {
 let expressionsVariables = {
   variable1: null,
   variable2: null,
-  randomConective: null, 
+  variable3 : null,
+  hasVariable3: false,
+  randomConective1: null, 
+  randomConective2: null,
   hasNotConective: false, 
   hasNotConective1: false,
   hasNotConective2: false,
+  variable3Text1: "",
+  variable3Text2: "",
   notOperator: "",
   notOperator1: "",
   notOperator2: ""
 };
 
-let originalConectivesList = ["AND", "OR", "→", "XOR"]
+const originalConectivesList = ["AND", "OR", "→", "XOR"]
+const operatorsList = {
+    "AND": (a, b) => a && b,
+    "OR": (a, b) => a || b,
+    "→": (a, b) => !a || b,
+    "XOR": (a, b) => a !== b
+  }
 let modifiedConectivesList
 
-// habilitar a visualização da tela de seleção de dificuldades ao clicar no botão de Iniciar
+// habilitar a visualização da tela de seleção de dificuldades ao clicar no botão de "Iniciar!"
 function showDifficultyPanelElements(){
   toggleVisibility([uiElements.difficultyPanel], "flex")
   toggleVisibility([uiElements.chooseDifficultyText], "block")
   toggleVisibility([mainButtons.startButton, uiElements.mainText], "none")
 }
 
-// adicionar um ouvinte de eventos ("click") para cada botão de dificuldade e resgatar seu valor(data-value)
+// adicionar um ouvinte de eventos ("click") para cada botão de dificuldade e resgatar seu valor (data-value)
 Object.values(difficultyButtons).forEach(button => {
   button.addEventListener("click", event => {
     gameState.difficultyLevel = Number(event.target.getAttribute("data-value"));
@@ -76,15 +87,17 @@ function setDifficulty(level){
   startGame()
 }
 
-// função para alterar display dos elementos na página
+//função para alterar display dos elementos na página
 function toggleVisibility(elements, displayType) {
   elements.forEach(el => el.style.display = displayType);
 }
-// função para atualizar o contador da questão atual
+
+//função para atualizar o contador da questão atual
 function updateQuestionCounter() {
   uiElements.questionCounter.innerHTML = `<span style="color:red; font-weight:bold;">${gameState.questionNumber}</span>/5`;
 }
-// função para iniciar o jogo
+
+//função para iniciar o jogo
 function startGame(){
   toggleVisibility([uiElements.expressionsPanel],"block")
   toggleVisibility([ mainButtons.trueButton, mainButtons.falseButton, mainButtons.resetButton, uiElements.questionCounter], "inline-block");
@@ -92,62 +105,88 @@ function startGame(){
   updateQuestionCounter()
   generateExpression() 
 }
-// função para gerar as expressões aleatóriamente
-function generateExpression(){
-  expressionsVariables.randomConective = modifiedConectivesList[Math.floor(Math.random() * modifiedConectivesList.length)]
-  expressionsVariables.variable1 = Math.random() < 0.5
-  expressionsVariables.variable2 = Math.random() < 0.5 
-  let parenthesis1 = ""
-  let parenthesis2 = ""
 
-  // gerar NOT dinamicamente nas expressões a cada rodada, com base na dificuldade escolhida
-  switch(gameState.difficultyLevel){
-    case 1:
-      expressionsVariables.hasNotConective = false;
-      expressionsVariables.hasNotConective1 = Math.random() < 0.2
-      expressionsVariables.hasNotConective2 = Math.random() < 0.2
-      break
-    case 2:
-      expressionsVariables.hasNotConective = Math.random() < 0.5
-      expressionsVariables.hasNotConective1 = Math.random() < 0.8
-      expressionsVariables.hasNotConective2 = Math.random() < 0.8
-      break
-    case 3:
-      expressionsVariables.hasNotConective = Math.random() < 0.7
-      expressionsVariables.hasNotConective1 = expressionsVariables.hasNotConective2 = true
-      break
+//função para gerar as expressões aleatóriamente
+function generateExpression(){
+  expressionsVariables.randomConective1 = originalConectivesList[Math.floor(Math.random() * originalConectivesList.length)]
+  expressionsVariables.randomConective2 = modifiedConectivesList[Math.floor(Math.random() * modifiedConectivesList.length)]
+  expressionsVariables.variable1 = Math.random() < 0.5
+  expressionsVariables.variable2 = Math.random() < 0.5
+  expressionsVariables.variable3 = Math.random() < 0.5 
+  const parenthesisObj = {
+    parenthesis1: "",
+    parenthesis2: "",
+    parenthesis3: "",
+    parenthesis4: ""
   }
-  const operatorsList = {
-    "AND": (a, b) => a && b,
-    "OR": (a, b) => a || b,
-    "→": (a, b) => !a || b,
-    "XOR": (a, b) => a !== b
-  }
-  if (operatorsList[expressionsVariables.randomConective]) {
-    const operator = operatorsList[expressionsVariables.randomConective]; 
-    gameState.result = operator(
+  const difficultyConfig = {
+  1: {hasVariable3: 0, hasNotConective: 0.1, hasNotConective1: 0.5, hasNotConective2: 0.5},
+  2: {hasVariable3: 0.1, hasNotConective: 0.5, hasNotConective1: 0.7, hasNotConective2: 0.7},
+  3: {hasVariable3: 0.5, hasNotConective: 0.7, hasNotConective1: 0.8, hasNotConective2: 0.8}
+  };
+  
+  //gerar NOT dinamicamente nas expressões a cada rodada, com base na dificuldade escolhida, além de verficar se a variável 3 (R) é true
+  function applyNotAndVariable3Logic(){
+    const configSelected = difficultyConfig[gameState.difficultyLevel]
+    expressionsVariables.hasNotConective = Math.random() < configSelected.hasNotConective
+    expressionsVariables.hasNotConective1 = Math.random() < configSelected.hasNotConective1
+    expressionsVariables.hasNotConective2 = Math.random() < configSelected.hasNotConective2
+    expressionsVariables.hasVariable3 = Math.random() < configSelected.hasVariable3
+    
+    gameState.result = operatorsList[expressionsVariables.randomConective2](
       expressionsVariables.hasNotConective1 ? !expressionsVariables.variable1 : expressionsVariables.variable1,
       expressionsVariables.hasNotConective2 ? !expressionsVariables.variable2 : expressionsVariables.variable2
     );
-  }
-   expressionsVariables.notOperator = expressionsVariables.hasNotConective ? "NOT" : ""
-  if(expressionsVariables.hasNotConective){
-    parenthesis1 = "("
-    parenthesis2 = ")"
-    gameState.result = !gameState.result
-  } 
-  
-  expressionsVariables.notOperator1 = expressionsVariables.hasNotConective1 ? "NOT" : ""
-  expressionsVariables.notOperator2 = expressionsVariables.hasNotConective2 ? "NOT" : ""
-  
-  // expressão gerada aleatóriamente
-  uiElements.expressions.textContent = `Q = ${possibleValues[expressionsVariables.variable1]}, P = ${possibleValues[expressionsVariables.variable2]}, qual o resultado de ${expressionsVariables.notOperator} ${parenthesis1} ${expressionsVariables.notOperator1} Q ${expressionsVariables.randomConective} ${expressionsVariables.notOperator2} P ${parenthesis2} ?`
-}
-// função para verificar a resposta do jogador
-function verifyAnswer(event){
-  let userAnswer = event.target.getAttribute("data-value") === "true"
 
-  if (userAnswer === gameState.result) {
+    if(expressionsVariables.hasNotConective1 && expressionsVariables.hasNotConective2){
+      expressionsVariables.notOperator1 = "NOT"
+      expressionsVariables.notOperator2 =  "NOT"
+    }
+    else if(expressionsVariables.hasNotConective1){
+      expressionsVariables.notOperator1 = "NOT"
+    }
+    else if(expressionsVariables.notOperator2){
+      expressionsVariables.notOperator2 =  "NOT"
+    }
+
+    if(expressionsVariables.hasNotConective){
+      expressionsVariables.notOperator = "NOT"
+      parenthesisObj.parenthesis2 = "("
+      parenthesisObj.parenthesis3 = ")"
+      gameState.result = !gameState.result  
+    } 
+    else{
+      expressionsVariables.notOperator = ""
+      parenthesisObj.parenthesis2 = ""
+      parenthesisObj.parenthesis3 = ""
+    }
+
+    if(expressionsVariables.hasVariable3){
+      expressionsVariables.variable3Text1 = `R = ${possibleValues[expressionsVariables.variable3]},`
+      expressionsVariables.variable3Text2 = "R"
+      parenthesisObj.parenthesis1 = "("
+      parenthesisObj.parenthesis4 = ")"
+      gameState.result = operatorsList[expressionsVariables.randomConective1](
+      expressionsVariables.variable3, gameState.result )
+    }
+    else{
+      expressionsVariables.variable3Text1 = ""
+      expressionsVariables.variable3Text2 = ""
+      expressionsVariables.randomConective1 = ""
+    }
+  }
+
+  applyNotAndVariable3Logic()
+  
+  //expressão gerada
+  uiElements.expressions.textContent = `${expressionsVariables.variable3Text1} Q = ${possibleValues[expressionsVariables.variable1]} e P = ${possibleValues[expressionsVariables.variable2]}. Qual o resultado de ${expressionsVariables.variable3Text2} ${expressionsVariables.randomConective1} ${parenthesisObj.parenthesis1} ${expressionsVariables.notOperator} ${parenthesisObj.parenthesis2} ${expressionsVariables.notOperator1} Q ${expressionsVariables.randomConective2} ${expressionsVariables.notOperator2} P ${parenthesisObj.parenthesis3} ${parenthesisObj.parenthesis4} ?`
+}
+
+//função para verificar a resposta do jogador
+function verifyAnswer(event){
+  let userAnswer = event.target.getAttribute("data-value")
+
+  if (userAnswer == String(gameState.result)){
   gameState.placar++;
   } 
   else if (gameState.placar > 0) {
@@ -164,8 +203,8 @@ function verifyAnswer(event){
     uiElements.expressions.innerHTML = `Placar final: <span style="color: red; font-weight: bold;"> ${gameState.placar} </span>`
     toggleVisibility([mainButtons.trueButton, mainButtons.falseButton], "none")
     toggleVisibility([uiElements.motivationalText], "inline-block")
-    motivationalText.style.display = "block"
 
+    //mostrar uma mensagem diferente para o jogador de acordo com o placar final
     switch(gameState.placar){
       case 0:
         motivationalText.textContent = "Bom, pelo menos você testou se o placar estava funcionando..."
@@ -192,9 +231,8 @@ function verifyAnswer(event){
 function resetGame(){
   uiElements.mainText.style.display = "block"
   toggleVisibility([mainButtons.startButton], "inline-block");
-  toggleVisibility([uiElements.expressionsPanel, mainButtons.trueButton, mainButtons.falseButton, mainButtons.resetButton, motivationalText,questionCounter], "none");
+  toggleVisibility([uiElements.expressionsPanel, mainButtons.trueButton, mainButtons.falseButton, mainButtons.resetButton, uiElements.motivationalText, uiElements.questionCounter], "none");
   uiElements.expressions.textContent = ""
-  questionCounter.innerHTML = ""
   gameState.contador = 0
   gameState.placar = 0
   gameState.questionNumber = 0
