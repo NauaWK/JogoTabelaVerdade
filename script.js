@@ -47,22 +47,32 @@ let expressionsVariables = {
 };
 
 const originalConectivesList = ["AND", "OR", "→", "XOR"]
+let modifiedConectivesList
 const operatorsList = {
     "AND": (a, b) => a && b,
     "OR": (a, b) => a || b,
     "→": (a, b) => !a || b,
     "XOR": (a, b) => a !== b
   }
-let modifiedConectivesList
 
-// habilitar a visualização da tela de seleção de dificuldades ao clicar no botão de "Iniciar!"
+//habilitar a visualização do painel de seleção de dificuldades ao clicar no botão de "Iniciar!"
 function showDifficultyPanelElements(){
   toggleVisibility([uiElements.difficultyPanel], "flex")
   toggleVisibility([uiElements.chooseDifficultyText], "block")
   toggleVisibility([mainButtons.startButton, uiElements.mainText], "none")
 }
 
-// adicionar um ouvinte de eventos ("click") para cada botão de dificuldade e resgatar seu valor (data-value)
+//função para atualizar o contador da questão atual
+function updateQuestionCounter() {
+  uiElements.questionCounter.innerHTML = `<span style="color:red; font-weight:bold;">${gameState.questionNumber}</span>/5`;
+}
+
+//função para alterar display dos elementos na página
+function toggleVisibility(elements, displayType) {
+  elements.forEach(el => el.style.display = displayType);
+}
+
+//adicionar um ouvinte de eventos ("click") para cada botão de dificuldade e resgatar seu valor (data-value)
 Object.values(difficultyButtons).forEach(button => {
   button.addEventListener("click", event => {
     gameState.difficultyLevel = Number(event.target.getAttribute("data-value"));
@@ -70,7 +80,7 @@ Object.values(difficultyButtons).forEach(button => {
   });
 });
 
-// função para modificar a lista de conectivos de acordo com a dificuldade
+//função para modificar a lista de conectivos de acordo com a dificuldade
 function setDifficulty(level){
   modifiedConectivesList = [...originalConectivesList]
   switch(level){
@@ -80,21 +90,8 @@ function setDifficulty(level){
     case 2:
       modifiedConectivesList = modifiedConectivesList.filter(conective => !["XOR"].includes(conective))
       break
-    case 3:
-      modifiedConectivesList = modifiedConectivesList.filter(conective => !["AND", "OR"].includes(conective))
-      break  
   }
   startGame()
-}
-
-//função para alterar display dos elementos na página
-function toggleVisibility(elements, displayType) {
-  elements.forEach(el => el.style.display = displayType);
-}
-
-//função para atualizar o contador da questão atual
-function updateQuestionCounter() {
-  uiElements.questionCounter.innerHTML = `<span style="color:red; font-weight:bold;">${gameState.questionNumber}</span>/5`;
 }
 
 //função para iniciar o jogo
@@ -113,6 +110,9 @@ function generateExpression(){
   expressionsVariables.variable1 = Math.random() < 0.5
   expressionsVariables.variable2 = Math.random() < 0.5
   expressionsVariables.variable3 = Math.random() < 0.5 
+  const originalVariable1 = expressionsVariables.variable1;
+  const originalVariable2 = expressionsVariables.variable2;
+
   const parenthesisObj = {
     parenthesis1: "",
     parenthesis2: "",
@@ -122,64 +122,68 @@ function generateExpression(){
   const difficultyConfig = {
   1: {hasVariable3: 0, hasNotConective: 0.1, hasNotConective1: 0.5, hasNotConective2: 0.5},
   2: {hasVariable3: 0.1, hasNotConective: 0.5, hasNotConective1: 0.7, hasNotConective2: 0.7},
-  3: {hasVariable3: 0.5, hasNotConective: 0.7, hasNotConective1: 0.8, hasNotConective2: 0.8}
-  };
+  3: {hasVariable3: 0.8, hasNotConective: 0.7, hasNotConective1: 0.8, hasNotConective2: 0.8}
+  }
   
-  //gerar NOT dinamicamente nas expressões a cada rodada, com base na dificuldade escolhida, além de verficar se a variável 3 (R) é true
+  //gerar NOT dinamicamente nas expressões a cada rodada, com base na dificuldade escolhida, além de verficar se a variável 3 (R) tem valor true
   function applyNotAndVariable3Logic(){
     const configSelected = difficultyConfig[gameState.difficultyLevel]
     expressionsVariables.hasNotConective = Math.random() < configSelected.hasNotConective
     expressionsVariables.hasNotConective1 = Math.random() < configSelected.hasNotConective1
     expressionsVariables.hasNotConective2 = Math.random() < configSelected.hasNotConective2
     expressionsVariables.hasVariable3 = Math.random() < configSelected.hasVariable3
-    
-    gameState.result = operatorsList[expressionsVariables.randomConective2](
-      expressionsVariables.hasNotConective1 ? !expressionsVariables.variable1 : expressionsVariables.variable1,
-      expressionsVariables.hasNotConective2 ? !expressionsVariables.variable2 : expressionsVariables.variable2
-    );
-
-    if(expressionsVariables.hasNotConective1 && expressionsVariables.hasNotConective2){
-      expressionsVariables.notOperator1 = "NOT"
-      expressionsVariables.notOperator2 =  "NOT"
-    }
-    else if(expressionsVariables.hasNotConective1){
-      expressionsVariables.notOperator1 = "NOT"
-    }
-    else if(expressionsVariables.notOperator2){
-      expressionsVariables.notOperator2 =  "NOT"
-    }
-
-    if(expressionsVariables.hasNotConective){
-      expressionsVariables.notOperator = "NOT"
-      parenthesisObj.parenthesis2 = "("
-      parenthesisObj.parenthesis3 = ")"
-      gameState.result = !gameState.result  
-    } 
-    else{
-      expressionsVariables.notOperator = ""
-      parenthesisObj.parenthesis2 = ""
-      parenthesisObj.parenthesis3 = ""
-    }
-
-    if(expressionsVariables.hasVariable3){
-      expressionsVariables.variable3Text1 = `R = ${possibleValues[expressionsVariables.variable3]},`
-      expressionsVariables.variable3Text2 = "R"
-      parenthesisObj.parenthesis1 = "("
-      parenthesisObj.parenthesis4 = ")"
-      gameState.result = operatorsList[expressionsVariables.randomConective1](
-      expressionsVariables.variable3, gameState.result )
-    }
-    else{
-      expressionsVariables.variable3Text1 = ""
-      expressionsVariables.variable3Text2 = ""
-      expressionsVariables.randomConective1 = ""
-    }
-  }
+    }  
 
   applyNotAndVariable3Logic()
   
+  if(expressionsVariables.hasNotConective1){
+    expressionsVariables.notOperator1 = "NOT"
+    expressionsVariables.variable1 = !expressionsVariables.variable1;
+  }  
+  else{
+    expressionsVariables.notOperator1 = ""
+  }
+  
+  if(expressionsVariables.hasNotConective2){
+    expressionsVariables.notOperator2 = "NOT"
+    expressionsVariables.variable2 = !expressionsVariables.variable2;
+  }
+  else{
+    expressionsVariables.notOperator2 = ""
+  }
+
+  gameState.result = operatorsList[expressionsVariables.randomConective2](
+    expressionsVariables.variable1, expressionsVariables.variable2
+  );
+
+  if(expressionsVariables.hasNotConective){
+    expressionsVariables.notOperator = "NOT"
+    parenthesisObj.parenthesis2 = "("
+    parenthesisObj.parenthesis3 = ")"
+    gameState.result = !gameState.result;
+  } 
+  else{
+    expressionsVariables.notOperator = ""
+    parenthesisObj.parenthesis2 = ""
+    parenthesisObj.parenthesis3 = ""
+  }
+
+  if(expressionsVariables.hasVariable3){
+    expressionsVariables.variable3Text1 = `R = ${possibleValues[expressionsVariables.variable3]},`
+    expressionsVariables.variable3Text2 = "R"
+    parenthesisObj.parenthesis1 = "("
+    parenthesisObj.parenthesis4 = ")"
+    gameState.result = operatorsList[expressionsVariables.randomConective1](
+    expressionsVariables.variable3, gameState.result )
+  }
+  else{
+    expressionsVariables.variable3Text1 = ""
+    expressionsVariables.variable3Text2 = ""
+    expressionsVariables.randomConective1 = ""
+  }
+
   //expressão gerada
-  uiElements.expressions.textContent = `${expressionsVariables.variable3Text1} Q = ${possibleValues[expressionsVariables.variable1]} e P = ${possibleValues[expressionsVariables.variable2]}. Qual o resultado de ${expressionsVariables.variable3Text2} ${expressionsVariables.randomConective1} ${parenthesisObj.parenthesis1} ${expressionsVariables.notOperator} ${parenthesisObj.parenthesis2} ${expressionsVariables.notOperator1} Q ${expressionsVariables.randomConective2} ${expressionsVariables.notOperator2} P ${parenthesisObj.parenthesis3} ${parenthesisObj.parenthesis4} ?`
+  uiElements.expressions.textContent = `${expressionsVariables.variable3Text1} Q = ${possibleValues[originalVariable1]} e P = ${possibleValues[originalVariable2]}. Qual o resultado de ${expressionsVariables.variable3Text2} ${expressionsVariables.randomConective1} ${parenthesisObj.parenthesis1} ${expressionsVariables.notOperator} ${parenthesisObj.parenthesis2} ${expressionsVariables.notOperator1} Q ${expressionsVariables.randomConective2} ${expressionsVariables.notOperator2} P ${parenthesisObj.parenthesis3} ${parenthesisObj.parenthesis4} ?`
 }
 
 //função para verificar a resposta do jogador
