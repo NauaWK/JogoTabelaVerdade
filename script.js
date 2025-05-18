@@ -211,22 +211,22 @@ function verifyAnswer(event){
     //mostrar uma mensagem diferente para o jogador de acordo com o placar final
     switch(gameState.placar){
       case 0:
-        motivationalText.textContent = "Bom, pelo menos você testou se o placar estava funcionando..."
+        motivationalText.textContent = "Pelo menos você testou se o placar estava funcionando..."
         break
       case 1:
-        motivationalText.textContent = "É, poderia ter sido pior..."
+        motivationalText.textContent = "Bem, poderia ter sido pior..."
         break
       case 2:
-        motivationalText.textContent = "2 pontos... isso já é o dobro do fracasso anterior ;)"
+        motivationalText.textContent = "2 pontos... melhor se esforçar mais na próxima!"
         break
       case 3:
         motivationalText.textContent = "É, já está acima da média pelo menos..."
         break
       case 4:
-        motivationalText.textContent = "Ae agora já dá para contar nos dedos, sem vergonha! (Não sei se essa vírgula tá no lugar certo...)"
+        motivationalText.textContent = "Boa! Mais 1 ponto e voce gabarita!"
         break
       case 5:
-        motivationalText.textContent = "Parabéns, deve ter prestado atenção nas aulas ou foi pura cagada mesmo... joga aí de novo pra confirmar :)"
+        motivationalText.textContent = "Parabéns! Deve ter prestado atenção nas aulas... ou será que foi pura sorte? Eu jogaria denovo pra confirmar..."
         break
     }
   }
