@@ -121,8 +121,8 @@ function generateExpression(){
   }
   const difficultyConfig = {
   1: {hasVariable3: 0, hasNotConective: 0.1, hasNotConective1: 0.5, hasNotConective2: 0.5},
-  2: {hasVariable3: 0.1, hasNotConective: 0.5, hasNotConective1: 0.7, hasNotConective2: 0.7},
-  3: {hasVariable3: 0.8, hasNotConective: 0.7, hasNotConective1: 0.8, hasNotConective2: 0.8}
+  2: {hasVariable3: 0.2, hasNotConective: 0.5, hasNotConective1: 0.7, hasNotConective2: 0.7},
+  3: {hasVariable3: 1, hasNotConective: 0.7, hasNotConective1: 0.8, hasNotConective2: 0.8}
   }
   
   //gerar NOT dinamicamente nas expressões a cada rodada, com base na dificuldade escolhida, além de verficar se a variável 3 (R) tem valor true
