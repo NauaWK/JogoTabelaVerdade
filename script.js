@@ -192,9 +192,6 @@ function verifyAnswer(event){
 
   if (userAnswer == String(gameState.result)){
   gameState.placar++;
-  } 
-  else if (gameState.placar > 0) {
-  gameState.placar--;
   }
   gameState.questionNumber ++
   updateQuestionCounter()
